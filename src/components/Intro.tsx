@@ -24,14 +24,24 @@ const SwiperButtonNext = ({ children }: any) => {
   return <IonButton onClick={() => swiper.slideNext()}>{children}</IonButton>;
 };
 
-const Intro: React.FC<ContainerProps> = () => {
+const Intro: React.FC<ContainerProps> = ({ onFinish }) => {
   return (
     <Swiper>
       <SwiperSlide>
         <img src={intro1} alt="intro 1" />
         <IonText>Build awesome apps with Ionic UI components</IonText>
+        <SwiperButtonNext>Next</SwiperButtonNext>
       </SwiperSlide>
-      <SwiperSlide>Two</SwiperSlide>
+      <SwiperSlide>
+        <img src={intro2} alt="intro 2" />
+        <IonText>Create powerful native apps with Capacitor</IonText>
+        <SwiperButtonNext>Next</SwiperButtonNext>
+      </SwiperSlide>
+      <SwiperSlide>
+        <img src={intro3} alt="intro 3" />
+        <IonText>Enjoy learning to code</IonText>
+        <IonButton onClick={() => onFinish()}>Finish</IonButton>
+      </SwiperSlide>
     </Swiper>
   );
 };
