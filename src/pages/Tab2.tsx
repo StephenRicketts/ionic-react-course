@@ -10,9 +10,6 @@ import {
 import React from "react";
 
 const Tab2: React.FC = () => {
-  const getUsers = async () => {
-    const data = await fetch("https://randomuser.me/api?results=10");
-  };
   return (
     <IonPage>
       <IonHeader>
