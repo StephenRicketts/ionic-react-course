@@ -4,18 +4,25 @@ import {
   IonButtons,
   IonCard,
   IonCardContent,
+  IonCardHeader,
   IonChip,
   IonContent,
+  IonDatetime,
+  IonFab,
+  IonFabButton,
   IonHeader,
   IonIcon,
   IonImg,
   IonItem,
   IonLabel,
   IonMenuButton,
+  IonModal,
   IonPage,
   IonRefresher,
   IonRefresherContent,
   IonSearchbar,
+  IonSegment,
+  IonSegmentButton,
   IonSkeletonText,
   IonTitle,
   IonToolbar,
@@ -23,8 +30,8 @@ import {
   useIonToast,
   useIonViewWillEnter,
 } from "@ionic/react";
-import { trashBinOutline } from "ionicons/icons";
-import React, { useRef, useState } from "react";
+import { addOutline, trashBinOutline } from "ionicons/icons";
+import React, { useEffect, useRef, useState } from "react";
 
 const List: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -33,6 +40,16 @@ const List: React.FC = () => {
   const [showToast] = useIonToast();
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const modal = useRef<HTMLIonModalElement>(null);
+  const cardModal = useRef<HTMLIonModalElement>(null);
+  const [presentingElement, setPresentingElement] =
+    useState<HTMLElement | null>(null);
+  const page = useRef(null);
+
+  const [activeSegment, setActiveSegment] = useState<any>("details");
+
+  useEffect(() => {
+    setPresentingElement(page.current);
+  }, []);
 
   const getUsers = async () => {
     const data = await fetch("https://randomuser.me/api?results=10");
@@ -72,7 +89,7 @@ const List: React.FC = () => {
   };
 
   return (
-    <IonPage>
+    <IonPage ref={page}>
       <IonHeader>
         <IonToolbar color="secondary">
           <IonButtons slot="start">
@@ -123,17 +140,16 @@ const List: React.FC = () => {
         {users &&
           !loading &&
           users.map((user, index) => {
-            console.log("user", user);
             return (
               <IonCard onClick={() => setSelectedUser(user)} key={index}>
                 <IonCardContent className="ion-no-padding">
                   <IonItem lines="none">
                     <IonAvatar slot="start">
-                      <IonImg src={user.picture.thumbnail} />
+                      <IonImg src={user.picture.large} />
                     </IonAvatar>
                     <IonLabel>
                       {user.name.first} {user.name.last}
-                      <p>{user.email}</p>
+                      <p style={{}}>{user.email}</p>
                     </IonLabel>
                     <IonChip slot="end" color={"primary"}>
                       {user.nat}
@@ -143,7 +159,69 @@ const List: React.FC = () => {
               </IonCard>
             );
           })}
+
+        <IonModal
+          breakpoints={[0, 0.5, 0.8]}
+          initialBreakpoint={0.5}
+          ref={modal}
+          isOpen={selectedUser !== null}
+          onIonModalDidDismiss={() => {
+            setSelectedUser(null);
+          }}
+        >
+          <IonHeader>
+            <IonToolbar color="light">
+              <IonButtons slot="start">
+                <IonButton>
+                  <IonButton onClick={() => modal.current?.dismiss()}>
+                    Close
+                  </IonButton>
+                  <IonTitle>
+                    {selectedUser?.name.first} {selectedUser?.name.last}
+                  </IonTitle>
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+            <IonToolbar color="light">
+              <IonSegment
+                value={activeSegment}
+                onIonChange={(e) => setActiveSegment(e.detail.value!)}
+              >
+                <IonSegmentButton value="details">Details</IonSegmentButton>
+                <IonSegmentButton value="calendar">Sheet</IonSegmentButton>
+              </IonSegment>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent className="ion-padding">
+            {activeSegment === "details" && <>THESE ARE DETAILS</>}
+            {activeSegment === "calendar" && <IonDatetime />}
+          </IonContent>
+        </IonModal>
+
+        <IonModal
+          ref={cardModal}
+          trigger="card-modal"
+          presentingElement={presentingElement!}
+        >
+          <IonCardHeader>
+            <IonToolbar>
+              <IonButtons slot="start">
+                <IonButton onClick={() => cardModal.current?.dismiss()}>
+                  Close
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonCardHeader>
+          <IonContent>
+            <p>my card modal</p>
+          </IonContent>
+        </IonModal>
       </IonContent>
+      <IonFab vertical="bottom" horizontal="end" slot="fixed">
+        <IonFabButton id="card-modal">
+          <IonIcon icon={addOutline} />
+        </IonFabButton>
+      </IonFab>
     </IonPage>
   );
 };
