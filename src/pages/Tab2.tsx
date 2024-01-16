@@ -1,5 +1,7 @@
 import {
   CreateAnimation,
+  Gesture,
+  GestureDetail,
   IonButton,
   IonButtons,
   IonContent,
@@ -8,16 +10,43 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  createGesture,
   useIonViewDidEnter,
 } from "@ionic/react";
 import React, { useRef } from "react";
 
 const Tab2: React.FC = () => {
   const animationRef = useRef<CreateAnimation>(null);
+  const elementRef = useRef<HTMLDivElement | null>(null);
 
   useIonViewDidEnter(() => {
-    animationRef.current?.animation.play();
+    // animationRef.current?.animation.play();
+    const gesture: Gesture = createGesture({
+      el: elementRef.current!,
+      threshold: 0,
+      gestureName: "my-gesture",
+      onStart: (evt) => onStartHandler(evt),
+      onMove: (evt) => onMoveHandler(evt),
+    });
+
+    gesture.enable();
   });
+
+  const onStartHandler = (detail: GestureDetail) => {
+    elementRef.current!.style.transition = "none";
+  };
+
+  const onMoveHandler = (detail: GestureDetail) => {
+    const x = detail.currentX - detail.startX;
+    const y = detail.currentY - detail.startY;
+
+    elementRef.current!.style.transform = `translate(${x}px, ${y}px)`;
+  };
+
+  const onMoveEnd = (detail: GestureDetail) => {
+    elementRef.current!.style.transition = "transform 500ms ease-out";
+    elementRef.current!.style.transform = ` translate(0px, 0px)`;
+  };
 
   return (
     <IonPage>
@@ -45,6 +74,10 @@ const Tab2: React.FC = () => {
             Join Ionic Academy
           </IonButton>
         </CreateAnimation>
+        <div
+          ref={elementRef}
+          style={{ width: 50, height: 50, backgroundColor: "red" }}
+        ></div>
       </IonContent>
     </IonPage>
   );
