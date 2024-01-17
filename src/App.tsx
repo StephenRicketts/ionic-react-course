@@ -25,7 +25,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Menu from "./pages/Menu";
 
-setupIonicReact();
+setupIonicReact({
+  // mode: "ios",
+  // animated: false,
+});
 
 const App: React.FC = () => (
   <IonApp>

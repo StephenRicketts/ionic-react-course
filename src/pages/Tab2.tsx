@@ -27,6 +27,7 @@ const Tab2: React.FC = () => {
       gestureName: "my-gesture",
       onStart: (evt) => onStartHandler(evt),
       onMove: (evt) => onMoveHandler(evt),
+      onMoveEnd: (evt: any) => onMoveHandler(evt),
     });
 
     gesture.enable();
@@ -58,7 +59,7 @@ const Tab2: React.FC = () => {
           <IonTitle>Tab2</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding" scrollY={false}>
         <CreateAnimation
           ref={animationRef}
           duration={2000}
