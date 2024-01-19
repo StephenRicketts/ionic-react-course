@@ -20,6 +20,7 @@ import { logInOutline, personCircleOutline, repeatSharp } from "ionicons/icons";
 import goblin from "../assets/goblin.jpg";
 import Intro from "../components/Intro";
 import { Preferences } from "@capacitor/preferences";
+import { CardSwiper } from "./CardSwiper";
 
 const INTRO_KEY = "intro-seen";
 
@@ -67,6 +68,9 @@ const Login: React.FC = () => {
               <IonTitle>Login</IonTitle>
             </IonToolbar>
           </IonHeader>
+          <div className="bg-red-600 h-10 w-10">
+            <CardSwiper />
+          </div>
           <IonContent scrollY={false} className="ion-padding">
             <IonGrid fixed>
               <IonRow className="ion-justify-content-center">
